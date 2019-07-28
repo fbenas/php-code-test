@@ -1,5 +1,9 @@
 <?php
 
+namespace PhpCodeTest;
+
+use SimpleXMLElement;
+
 class GetBookList
 {
     private $format;

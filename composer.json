@@ -1,0 +1,26 @@
+{
+    "name": "fbenas/php-code-test",
+    "description": "A solution to the funeralzone/php-code-test package",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Phil Burton",
+            "email": "phil@dpgburton.com"
+        }
+    ],
+    "autoload": {
+       "psr-4": {
+           "PhpCodeTest\\": "src"
+       }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PhpCodeTest\\Tests\\Unit\\": "tests/unit"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require-dev": {
+        "phpunit/phpunit": "^7.5"
+    }
+}
