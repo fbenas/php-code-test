@@ -8,7 +8,7 @@ use Exception;
 /**
  * A all-in-one client for getting and handling an api GET
  *
- * @author Phil Burton <phil@d3r.com>
+ * @author Phil Burton <phil@pgburton.com>
  */
 class GetBookList
 {
@@ -23,7 +23,7 @@ class GetBookList
      * Construct our object; set the format
      *
      * @param string $format
-     * @author Phil Burton <phil@d3r.com>
+     * @author Phil Burton <phil@pgburton.com>
      */
     public function __construct(string $format = 'json')
     {
@@ -37,7 +37,7 @@ class GetBookList
      * @param string $authorName
      * @param int $limit
      * @return array
-     * @author Phil Burton <phil@d3r.com>
+     * @author Phil Burton <phil@pgburton.com>
      */
     public function getBooksByAuthor(string $authorName, int $limit = 10): array
     {
@@ -59,7 +59,7 @@ class GetBookList
      *
      * @param string $string
      * @return array
-     * @author Phil Burton <phil@d3r.com>
+     * @author Phil Burton <phil@pgburton.com>
      */
     protected function getArrayFromJsonString(string $string): array
     {
@@ -88,7 +88,7 @@ class GetBookList
      *
      * @param string $string
      * @return array
-     * @author Phil Burton <phil@d3r.com>
+     * @author Phil Burton <phil@pgburton.com>
      */
     protected function getArrayFromXmlString(string $string): array
     {
@@ -119,7 +119,7 @@ class GetBookList
      * Return the URL to make the response to
      *
      * @return string
-     * @author Phil Burton <phil@d3r.com>
+     * @author Phil Burton <phil@pgburton.com>
      */
     protected function getCurlUrl(string $authorName, int $limit): string
     {
@@ -138,7 +138,7 @@ class GetBookList
      * @param string $authorName
      * @param int $limit
      * @return string
-     * @author Phil Burton <phil@d3r.com>
+     * @author Phil Burton <phil@pgburton.com>
      */
     protected function runCurl(string $authorName, int $limit): string
     {
