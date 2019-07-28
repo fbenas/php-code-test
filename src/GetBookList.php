@@ -72,11 +72,11 @@ class GetBookList
         $array = [];
         foreach ($json as $result) {
             $array[] = [
-                'title' => $result->book->title,
-                'author' => $result->book->author,
-                'isbn' => $result->book->isbn,
-                'quantity' => $result->stock->level,
-                'price' => $result->stock->price,
+                'title' => (string )$result->book->name,
+                'author' => (string) $result->book->author_name,
+                'isbn' => (int) $result->book->isbn_number,
+                'quantity' => (int) $result->book->stock->number,
+                'price' => (float) $result->book->stock->unit_price,
             ];
         }
 
@@ -97,13 +97,14 @@ class GetBookList
             $xml = new SimpleXMLElement($string);
 
             $array = [];
+
             foreach ($xml as $result) {
                 $array[] = [
-                    'title' => $result->book['name'],
-                    'author' => $result->book['author_name'],
-                    'isbn' => $result->book['isbn_number'],
-                    'quantity' => $result->book->stock['number'],
-                    'price' => $result->book->stock['unit_price'],
+                    'title' => (string )$result->name,
+                    'author' => (string) $result->author_name,
+                    'isbn' => (int) $result->isbn_number,
+                    'quantity' => (int) $result->stock->number,
+                    'price' => (float) $result->stock->unit_price,
                 ];
             }
         } catch (Exception $e) {
@@ -120,7 +121,7 @@ class GetBookList
      * @return string
      * @author Phil Burton <phil@d3r.com>
      */
-    protected function getCurlUrl(): string
+    protected function getCurlUrl(string $authorName, int $limit): string
     {
         // return 'pgburton.com';
         return "http://api.book-seller-example.com/by-author?q="
