@@ -8,7 +8,7 @@ use PhpCodeTest\GetBookList;
 /**
  * An abstract test case
  *
- * @author Phil Burton <phil@d3r.com>
+ * @author Phil Burton <phil@pgburton.com>
  */
 abstract class AbstractTest extends TestCase
 {
@@ -18,7 +18,7 @@ abstract class AbstractTest extends TestCase
      * Create and return an instance of GetBookList
      *
      * @return PhpCodeTest\GetBookList
-     * @author Phil Burton <phil@d3r.com>
+     * @author Phil Burton <phil@pgburton.com>
      */
     protected function getNewInstance(string $format = null): GetBookList
     {
@@ -34,7 +34,7 @@ abstract class AbstractTest extends TestCase
      *
      * @param string $format
      * @return PhpCodeTest\GetBookList
-     * @author Phil Burton <phil@d3r.com>
+     * @author Phil Burton <phil@pgburton.com>
      */
     protected function getInstance(string $format = null): GetBookList
     {
@@ -53,7 +53,7 @@ abstract class AbstractTest extends TestCase
      * @param string $methodName
      * @param array $parameters
      * @return mixed
-     * @author Phil Burton <phil@d3r.com>
+     * @author Phil Burton <phil@pgburton.com>
      */
     protected function invokeMethod(GetBookList &$object, string $methodName, array $parameters = array())
     {

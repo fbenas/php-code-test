@@ -22,7 +22,7 @@ class GetBookListTest extends AbstractTest
      * @param int $limit
      * @param string $expected
      * @param string|null $format
-     * @author Phil Burton <phil@d3r.com>
+     * @author Phil Burton <phil@pgburton.com>
      */
     public function testGetCurlUrlReturnsExpectedUrl(
         string $author,
@@ -39,7 +39,7 @@ class GetBookListTest extends AbstractTest
      * Data for testing getCurlUrl
      *
      * @return mixed[]
-     * @author Phil Burton <phil@d3r.com>
+     * @author Phil Burton <phil@pgburton.com>
      */
     public function getCurlUrlData(): array
     {
@@ -67,7 +67,7 @@ class GetBookListTest extends AbstractTest
     /**
      * Test getArrayFromXml
      *
-     * @author Phil Burton <phil@d3r.com>
+     * @author Phil Burton <phil@pgburton.com>
      */
     public function testGetArrayFromXmlStringReturnsExpectedArray()
     {
@@ -104,7 +104,7 @@ class GetBookListTest extends AbstractTest
     /**
      * Test getArrayFromJson
      *
-     * @author Phil Burton <phil@d3r.com>
+     * @author Phil Burton <phil@pgburton.com>
      */
     public function testGetArrayFromJsonStringReturnsExpectedArray()
     {
