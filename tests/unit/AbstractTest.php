@@ -4,6 +4,7 @@ namespace PhpCodeTest\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use PhpCodeTest\GetBookList;
+use ReflectionClass;
 
 /**
  * An abstract test case
@@ -57,7 +58,7 @@ abstract class AbstractTest extends TestCase
      */
     protected function invokeMethod(GetBookList &$object, string $methodName, array $parameters = array())
     {
-        $reflection = new \ReflectionClass(get_class($object));
+        $reflection = new ReflectionClass(get_class($object));
         $method = $reflection->getMethod($methodName);
         $method->setAccessible(true);
 
