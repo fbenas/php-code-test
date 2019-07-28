@@ -5,15 +5,40 @@ namespace PhpCodeTest;
 use SimpleXMLElement;
 use Exception;
 
+/**
+ * A all-in-one client for getting and handling an api GET
+ *
+ * @author Phil Burton <phil@d3r.com>
+ */
 class GetBookList
 {
-    private $format;
+    /**
+     * What format will we return?
+     *
+     * @var string xml|json
+     */
+    protected $format;
 
+    /**
+     * Construct our object; set the format
+     *
+     * @param string $format
+     * @author Phil Burton <phil@d3r.com>
+     */
     public function __construct(string $format = 'json')
     {
         $this->format = $format;
     }
 
+    /**
+     * Make an API call to get a list of authors
+     * Convert the result into an array
+     *
+     * @param string $authorName
+     * @param int $limit
+     * @return array
+     * @author Phil Burton <phil@d3r.com>
+     */
     public function getBooksByAuthor(string $authorName, int $limit = 10): array
     {
         $return = [];
@@ -29,6 +54,13 @@ class GetBookList
         return $return;
     }
 
+    /**
+     * Convert a string of JSON to an array
+     *
+     * @param string $string
+     * @return array
+     * @author Phil Burton <phil@d3r.com>
+     */
     protected function getArrayFromJsonString(string $string): array
     {
         $json = json_decode($string);
@@ -51,6 +83,13 @@ class GetBookList
         return $array;
     }
 
+    /**
+     * Convert a string of XML to an array
+     *
+     * @param string $string
+     * @return array
+     * @author Phil Burton <phil@d3r.com>
+     */
     protected function getArrayFromXmlString(string $string): array
     {
         try {
@@ -75,6 +114,12 @@ class GetBookList
         return $array;
     }
 
+    /**
+     * Return the URL to make the response to
+     *
+     * @return string
+     * @author Phil Burton <phil@d3r.com>
+     */
     protected function getCurlUrl(): string
     {
         // return 'pgburton.com';
@@ -86,6 +131,14 @@ class GetBookList
             . $this->format;
     }
 
+    /**
+     * Execute a curl request, return the output, silently handle errors
+     *
+     * @param string $authorName
+     * @param int $limit
+     * @return string
+     * @author Phil Burton <phil@d3r.com>
+     */
     protected function runCurl(string $authorName, int $limit): string
     {
         $curl = curl_init();
