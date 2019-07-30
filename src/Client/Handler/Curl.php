@@ -1,8 +1,9 @@
 <?php
 
-namespace PhpCodeTest\Client\Handlers;
+namespace PhpCodeTest\Client\Handler;
 
-use PhpCodeTest\Contracts\HandlerInterface;
+use PhpCodeTest\Client\Contracts\HandlerInterface;
+use Psr\Http\Message\RequestInterface;
 
 class Curl implements HandlerInterface
 {
@@ -10,14 +11,16 @@ class Curl implements HandlerInterface
     private $responseHeaders;
     private $responseBody;
 
-    public function request(string $method, string $uri, array $options = [])
+    public function request(RequestInterface $request)
     {
         // START STUFF
         $curl = curl_init();
 
         // REQUEST STUFF
         // Set the url
-        curl_setopt($curl, CURLOPT_URL, $uri);
+        curl_setopt($curl, CURLOPT_URL, $request->getUri());
+        // Set the method
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $request->getMethod());
         // Get curl to return the result not print it
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         // Get headers
