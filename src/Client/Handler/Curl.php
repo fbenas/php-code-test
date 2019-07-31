@@ -5,40 +5,62 @@ namespace PhpCodeTest\Client\Handler;
 use PhpCodeTest\Client\Contracts\HandlerInterface;
 use Psr\Http\Message\RequestInterface;
 
+/**
+ * Use curl to make HTTP requests
+ *
+ * @author Phil Burton <phil@pgburton.com>
+ */
 class Curl implements HandlerInterface
 {
+    /**
+     * HTTP response code
+     *
+     * @var int
+     */
     private $responseCode;
+
+    /**
+     * Headers from response
+     *
+     * @var array
+     */
     private $responseHeaders;
+
+    /**
+     * Body of response
+     *
+     * @var string
+     */
     private $responseBody;
 
+    /**
+     * Make a http request
+     *
+     * @param Psr\Http\Message\RequestInterface $request
+     * @author Phil Burton <phil@pgburton.com>
+     */
     public function request(RequestInterface $request)
     {
-        // START STUFF
+        // Curl initation
         $curl = curl_init();
 
-        // REQUEST STUFF
-        // Set the url
+        // Build request
+
         curl_setopt($curl, CURLOPT_URL, $request->getUri());
-        // Set the method
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $request->getMethod());
-        // Get curl to return the result not print it
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        // Get headers
         curl_setopt($curl, CURLOPT_HEADER, true);
 
-        // EXEC STUFF
+        // Execute request
         $curlResponse = curl_exec($curl);
 
-        // RESPONSE STUFF
-        // get the http response code
+        // Build response
         $responseCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-
-        // Get response header size
         $headerSize = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
         $responseHeader = substr($curlResponse, 0, $headerSize);
         $responseBody = substr($curlResponse, $headerSize);
 
-        // Get headers
+        // Handle headers
         $headers = [];
         foreach (explode("\r\n", $responseHeader) as $line) {
             $parts = explode(':', $line, 2);
@@ -54,22 +76,39 @@ class Curl implements HandlerInterface
         $this->responseHeaders = $headers;
         $this->responseBody = $responseBody;
 
-        // FINISH STUFF
-        // Get the error so we can check how the exec went
-        $error = curl_error($curl);
+        // Shutdown curl
+        // $error = curl_error($curl);
         curl_close($curl);
     }
 
+    /**
+     * Return the http response code
+     *
+     * @return int
+     * @author Phil Burton <phil@pgburton.com>
+     */
     public function getResponseCode(): int
     {
         return $this->responseCode;
     }
 
+    /**
+     * Return the body of the http response
+     *
+     * @return string
+     * @author Phil Burton <phil@pgburton.com>
+     */
     public function getResponseBody(): string
     {
         return $this->responseBody;
     }
 
+    /**
+     * Return the http response headers
+     *
+     * @return array
+     * @author Phil Burton <phil@pgburton.com>
+     */
     public function getResponseHeaders(): array
     {
         return $this->responseHeaders;
