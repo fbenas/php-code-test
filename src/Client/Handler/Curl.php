@@ -3,6 +3,7 @@
 namespace PhpCodeTest\Client\Handler;
 
 use PhpCodeTest\Client\Contracts\HandlerInterface;
+use PhpCodeTest\Client\Handler\CurlException;
 use Psr\Http\Message\RequestInterface;
 
 /**
@@ -41,11 +42,14 @@ class Curl implements HandlerInterface
      */
     public function request(RequestInterface $request)
     {
+        $uri = (string) $request->getUri();
+
+        $this->validateUri($uri);
+
         // Curl initation
         $curl = curl_init();
 
         // Build request
-
         curl_setopt($curl, CURLOPT_URL, $request->getUri());
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $request->getMethod());
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -53,7 +57,11 @@ class Curl implements HandlerInterface
 
         // Execute request
         $curlResponse = curl_exec($curl);
+        $error = curl_error($curl);
 
+        if ($error) {
+            throw new CurlException($error);
+        }
         // Build response
         $responseCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         $headerSize = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
@@ -112,5 +120,19 @@ class Curl implements HandlerInterface
     public function getResponseHeaders(): array
     {
         return $this->responseHeaders;
+    }
+
+    /**
+     * Validate the uri
+     *
+     * @param string $uri
+     * @author Phil Burton <phil@pgburton.com>
+     */
+    private function validateUri(string $uri)
+    {
+        // Example of some validation on our URI
+        if (empty($uri)) {
+            throw new CurlException('URI cannot be empty');
+        }
     }
 }

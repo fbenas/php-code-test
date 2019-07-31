@@ -4,9 +4,11 @@ namespace PhpCodeTest\Client;
 
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Request;
-use PhpCodeTest\Client\Factory;
 use PhpCodeTest\Client\Contracts\ClientInterface;
 use PhpCodeTest\Client\Contracts\HandlerInterface;
+use PhpCodeTest\Client\Handler\CurlException;
+use PhpCodeTest\Client\Factory;
+use PhpCodeTest\Client\ClientException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -24,6 +26,13 @@ class Http implements ClientInterface
      * @var PhpCodeTest\Contracts\HandlerInterface
      */
     protected $handler;
+
+    /**
+     * Any extra error information
+     *
+     * @var string
+     */
+    protected $error;
 
     /**
      * Set the hander solid on this client
@@ -65,7 +74,12 @@ class Http implements ClientInterface
      */
     protected function handleRequest(RequestInterface $request)
     {
-        $this->handler->request($request);
+        try {
+            $this->handler->request($request);
+        } catch (CurlException $e) {
+            $this->error = 'Curl Exception: ' . $e->getMessage();
+            throw new ClientException('Handler failed');
+        }
     }
 
     /**
@@ -93,5 +107,16 @@ class Http implements ClientInterface
     public function get(string $uri): ResponseInterface
     {
         return $this->request('GET', $uri);
+    }
+
+    /**
+     * Return error string
+     *
+     * @return string
+     * @author Phil Burton <phil@pgburton.com>
+     */
+    public function getError()
+    {
+        return $this->error;
     }
 }
