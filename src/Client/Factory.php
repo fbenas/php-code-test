@@ -8,7 +8,10 @@ use PhpCodeTest\Client\Handler\Factory as HandlerFactory;
 use PhpCodeTest\Client\Http;
 use PhpCodeTest\Client\Contracts\ClientInterface;
 use PhpCodeTest\Client\Contracts\ClientFactoryInterface;
+use PhpCodeTest\Client\Contracts\ParserInterface;
 use PhpCodeTest\Client\Contracts\HandlerFactoryInterface;
+use PhpCodeTest\Client\Parser\Json;
+use PhpCodeTest\Client\Parser\Xml;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -52,9 +55,11 @@ class Factory implements ClientFactoryInterface
      * @return PhpCodeTest\Client\Http
      * @author Phil Burton <phil@pgburton.com>
      */
-    public function createClient(): ClientInterface
+    public function createClient(string $format = 'json'): ClientInterface
     {
-        return (new Http)->setHandler($this->createHandlerFactory()->createHandler());
+        return (new Http)
+            ->setHandler($this->createHandlerFactory()->createHandler())
+            ->setParser($this->createParser($format));
     }
 
     /**
@@ -66,5 +71,16 @@ class Factory implements ClientFactoryInterface
     public function createHandlerFactory(): HandlerFactoryInterface
     {
         return new HandlerFactory;
+    }
+
+    public function createParser(string $format = 'json'): ParserInterface
+    {
+        if ($format == 'json') {
+            return new Json;
+        } elseif ($format == 'xml') {
+            return new Xml;
+        } else {
+            throw new FactoryException('Format not supported: ' . $format);
+        }
     }
 }

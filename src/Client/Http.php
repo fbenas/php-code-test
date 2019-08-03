@@ -6,9 +6,11 @@ use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Request;
 use PhpCodeTest\Client\Contracts\ClientInterface;
 use PhpCodeTest\Client\Contracts\HandlerInterface;
+use PhpCodeTest\Client\Contracts\ParserInterface;
 use PhpCodeTest\Client\Handler\CurlException;
 use PhpCodeTest\Client\Factory;
 use PhpCodeTest\Client\ClientException;
+use PhpCodeTest\Client\Parser\ParserException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -23,26 +25,41 @@ class Http implements ClientInterface
     /**
      * Object that will do the heavy lifiting
      *
-     * @var PhpCodeTest\Contracts\HandlerInterface
+     * @var PhpCodeTest\Client\Contracts\HandlerInterface
      */
     protected $handler;
 
     /**
-     * Any extra error information
+     * Object that will do the heavy lifiting
      *
-     * @var string
+     * @var PhpCodeTest\Client\Contracts\ParserInterface
      */
-    protected $error;
+    protected $parser;
+
+    protected $response;
 
     /**
      * Set the hander solid on this client
      *
-     * @param PhpCodeTest\Contracts\HandlerInterface $handler
+     * @param PhpCodeTest\Client\Contracts\HandlerInterface $handler
      * @author Phil Burton <phil@pgburton.com>
      */
     public function setHandler(HandlerInterface $handler)
     {
         $this->handler = $handler;
+
+        return $this;
+    }
+
+    /**
+     * Set the parser solid on this client
+     *
+     * @param PhpCodeTest\Client\Contracts\Parser $parser
+     * @author Phil Burton <phil@pgburton.com>
+     */
+    public function setParser(ParserInterface $parser)
+    {
+        $this->parser = $parser;
 
         return $this;
     }
@@ -78,7 +95,7 @@ class Http implements ClientInterface
             $this->handler->request($request);
         } catch (CurlException $e) {
             $this->error = 'Curl Exception: ' . $e->getMessage();
-            throw new ClientException('Handler failed');
+            throw new ClientException('Handler failed: ' . $e->getMessage());
         }
     }
 
@@ -94,7 +111,28 @@ class Http implements ClientInterface
         $headers = $this->handler->getResponseHeaders();
         $body = $this->handler->getResponseBody();
 
-        return (new Factory)->createResponse($code, $headers, $body);
+        $this->response = (new Factory)->createResponse($code, $headers, $body);
+
+        return $this->response;
+    }
+
+    public function getParsed(string $uri)
+    {
+        try {
+            $response = $this->get($uri);
+            return $this->parseResponse($this->response->getBody());
+        } catch (ParserException $e) {
+            throw new ClientException('Failed to parse response - ' . $e->getMessage());
+        }
+    }
+
+    private function parseResponse(string $body)
+    {
+        try {
+            return $this->parser->parse($body);
+        } catch (ParserException $e) {
+            throw new ClientException('Failed to parse response - ' . $e->getMessage());
+        }
     }
 
     /**
@@ -107,16 +145,5 @@ class Http implements ClientInterface
     public function get(string $uri): ResponseInterface
     {
         return $this->request('GET', $uri);
-    }
-
-    /**
-     * Return error string
-     *
-     * @return string
-     * @author Phil Burton <phil@pgburton.com>
-     */
-    public function getError()
-    {
-        return $this->error;
     }
 }
