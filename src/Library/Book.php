@@ -4,11 +4,15 @@ namespace PhpCodeTest\Library;
 
 use PhpCodeTest\Model\Model;
 
+/**
+ * Concrete model for books
+ *
+ * @author Phil Burton <phil@pgburton.com>
+ */
 class Book extends Model
 {
     protected $author;
     protected $title;
-    protected $publisher;
     protected $stock;
     protected $isbn;
     protected $price;
@@ -31,16 +35,6 @@ class Book extends Model
     public function setTitle(string $title)
     {
         $this->title = $title;
-    }
-
-    public function getPublisher(): string
-    {
-        return $this->publisher;
-    }
-
-    public function setPublisher(string $publisher)
-    {
-        $this->publisher = $publisher;
     }
 
     public function getStock(): int

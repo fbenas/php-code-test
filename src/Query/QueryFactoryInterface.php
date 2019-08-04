@@ -4,7 +4,7 @@ namespace PhpCodeTest\Query;
 
 use PhpCodeTest\Query\QueryInterface;
 
-class QueryFactoryInterface
+interface QueryFactoryInterface
 {
-    protected function createQuery(): QueryInterface;
+    public function createQuery(): QueryInterface;
 }

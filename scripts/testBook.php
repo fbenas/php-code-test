@@ -13,6 +13,9 @@ try {
             ->setParam('limit', 20)
             ->setParam('author', 'test')
     );
+
+    var_dump($book->getAuthor());
+    die();
 } catch (ClientException $e) {
     var_dump($e->getMessage());
     die();

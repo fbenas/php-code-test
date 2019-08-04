@@ -36,6 +36,11 @@ class Http implements ClientInterface
      */
     protected $parser;
 
+    /**
+     * HTTP response
+     *
+     * @var Psr\Http\Message\ResponseInterface
+     */
     protected $response;
 
     /**
@@ -116,6 +121,13 @@ class Http implements ClientInterface
         return $this->response;
     }
 
+    /**
+     * Make a get request, and use parser to format response
+     *
+     * @param string $uri
+     * @return mixed
+     * @author Phil Burton <phil@pgburton.com>
+     */
     public function getParsed(string $uri)
     {
         try {
@@ -126,6 +138,13 @@ class Http implements ClientInterface
         }
     }
 
+    /**
+     * Parse a response
+     *
+     * @param string $body
+     * @return mixed
+     * @author Phil Burton <phil@pgburton.com>
+     */
     private function parseResponse(string $body)
     {
         try {
